@@ -1,4 +1,4 @@
-const { Events, MessageFlags } = require('discord.js');
+const { Events, MessageFlags, MessageReferenceType } = require('discord.js');
 const { clientId, aiApiKey, prompt } = require('../config.json');
 const { OpenAI } = require("openai");
 
@@ -13,12 +13,18 @@ module.exports = {
         if (!message.mentions.users.has(clientId)) return;
         
         try {
-            const messages = await message.channel.messages.fetch({ limit: 5 });
+            const messages = await message.channel.messages.fetch({ limit: 10 });
             const messageHistory = Array.from(messages.values())
                 .reverse()
                 .map(msg => ({ role: msg.author.id === clientId ? 'assistant' : 'user', content: msg.content }));
             
-            messageHistory.unshift({ role: 'system', content: prompt })
+
+            if (message.reference?.type === MessageReferenceType.Default)  {
+                const reply = await message.fetchReference();
+                messageHistory.push({ role: reply.author.id === clientId ? 'assistant' : 'user', content: reply.content });
+            }
+            
+            messageHistory.unshift({ role: 'system', content: prompt });
             
             const response = await openai.chat.completions.create({
                 model: 'gpt-4o',
