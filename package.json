@@ -1,0 +1,15 @@
+{
+  "name": "argentcitrus",
+  "version": "1.0.0",
+  "description": "my ai replacement",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "agentcitrus",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "openai": "^4.86.2"
+  }
+}
