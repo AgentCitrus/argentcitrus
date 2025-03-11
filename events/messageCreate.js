@@ -22,7 +22,8 @@ module.exports = {
             
             const response = await openai.chat.completions.create({
                 model: 'gpt-4o',
-                messages: messageHistory
+                messages: messageHistory,
+                store: true
             });
 
             const botReply = response.choices[0].message.content;
